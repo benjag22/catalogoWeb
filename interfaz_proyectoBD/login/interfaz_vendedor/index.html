@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz de Vendedor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <p>Vendedor 1: <strong>Felipe Ruskin</strong></p>
+            <p>Rut: 98765432-1</p>
+            <p>Email: fruskin@gmail.com</p>
+            <p>Teléfono: 954243214</p>
+        </div>
+        <div class="catalog">
+            <div class="search-bar">
+                <input type="text" placeholder="Buscador">
+                <button>Filtrar</button>
+                <button>Ordenar</button>
+            </div>
+            <div class="product-list">
+                <div class="product-item">
+                    <span>Producto 1</span>
+                    <button>Notificar en bodega</button>
+                    <button>Añadir a Venta</button>
+                </div>
+                <!-- Repetir para otros productos -->
+            </div>
+            <button class="finalize">Finalizar venta</button>
+        </div>
+        <div class="details">
+            <div class="sale-details">
+                <h2>Detalle Venta</h2>
+                <p>Producto A: Cantidad</p>
+                <p>Producto B: Cantidad</p>
+                <p>Total + IVA: Cantidad</p>
+                <button>Generar boleta y pagar</button>
+            </div>
+            <div class="customer-details">
+                <h2>Datos Clientes</h2>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="RUT">
+                <input type="email" placeholder="Email">
+                <input type="text" placeholder="Teléfono">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

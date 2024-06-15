@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz de Gerente</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <p>Gerente 1: <strong>Alonso Sepúlveda</strong></p>
+            <p>Rut: 12345678-9</p>
+            <p>Email: gerente1@gmail.com</p>
+            <p>Teléfono: 984124222</p>
+        </div>
+        <div class="catalog">
+            <div class="search-bar">
+                <input type="text" placeholder="Buscador">
+                <button>Filtrar</button>
+                <button>Ordenar</button>
+            </div>
+            <div class="product-list">
+                <div class="product-item">
+                    <span>Producto 1</span>
+                    <button>Modificar Stock</button>
+                    <button>Marcar como No disponible</button>
+                </div>
+                <!-- Repetir para otros productos -->
+            </div>
+            <button class="view-sellers">Ver Vendedores</button>
+        </div>
+        <div class="stock-management">
+            <h2>Gestión de Stock</h2>
+            <input type="number" placeholder="Añadir Stock Venta">
+            <input type="number" placeholder="Quitar Stock Venta">
+            <div class="supplier-info">
+                <p>Información Proveedor</p>
+                <p>Stock en Venta: A</p>
+                <p>Stock en Bodega: B</p>
+            </div>
+        </div>
+        <div class="sellers-flow">
+            <h2>Flujo de Vendedores</h2>
+            <div class="seller-info">
+                <p>Información de vendedor 1</p>
+                <button>Calcular liquidez</button>
+                <button>Cancelar Contrato</button>
+            </div>
+            <!-- Repetir para otros vendedores -->
+        </div>
+    </div>
+</body>
+</html>
