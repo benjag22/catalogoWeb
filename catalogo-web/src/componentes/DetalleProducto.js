@@ -1,9 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import "./detalleStyle.css";
 
-function DetalleProducto({ match }) {
-    const { id } = match.params;
+function DetalleProducto() {
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    const redirectToPage = () => {
+        navigate("/");
+    };
+
     return (
         <div className="product-detail-container">
             <h1>Producto {id}</h1>
@@ -36,9 +42,7 @@ function DetalleProducto({ match }) {
                     </tbody>
                 </table>
             </div>
-            <Link to="/">
-                <button>Volver al Catálogo</button>
-            </Link>
+            <button onClick={redirectToPage}>Volver al Catálogo</button>
         </div>
     );
 }

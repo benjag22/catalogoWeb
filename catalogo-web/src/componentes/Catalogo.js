@@ -1,8 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "./catalogoStyle.css";
 
 function Catalogo() {
+    const navigate = useNavigate();
+
+    const handleDetailsClick = (id) => {
+        navigate(`/detalles/${id}`);
+    };
+
     return (
         <div className="catalog-container">
             <div className="search-bar">
@@ -19,9 +25,7 @@ function Catalogo() {
                     <span>Producto 1</span>
                     <span>Precio</span>
                     <span className="availability">Disponible</span>
-                    <Link to="/detalles/1">
-                        <button>Detalles</button>
-                    </Link>
+                    <button onClick={() => handleDetailsClick(1)}>Detalles</button>
                 </div>
             </div>
         </div>
