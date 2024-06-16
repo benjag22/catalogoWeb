@@ -1,0 +1,58 @@
+[
+    {
+        "sku": 1,
+        "nombre": "Poleron",
+        "descripcion": "Descripción del producto 1",
+        "color": "rojo",
+        "precio": 100,
+        "eliminado": false,
+        "id_tipo": 1,
+        "id_talla": 2,
+        "id_marca": 1,
+        "region": "Región 1",
+        "comuna": "Comuna 1",
+        "sucursal": "Sucursal 1"
+    },
+    {
+        "sku": 2,
+        "nombre": "Pantalon",
+        "descripcion": "Descripción del producto 2",
+        "color": "azul",
+        "precio": 200,
+        "eliminado": true,
+        "id_tipo": 1,
+        "id_talla": 2,
+        "id_marca": 2,
+        "region": "Región 2",
+        "comuna": "Comuna 2",
+        "sucursal": "Sucursal 2"
+    },
+    {
+        "sku": 3,
+        "nombre": "Gorro",
+        "descripcion": "Descripción del producto 3",
+        "color": "verde",
+        "precio": 150,
+        "eliminado": false,
+        "id_tipo": 2,
+        "id_talla": 1,
+        "id_marca": 1,
+        "region": "Región 1",
+        "comuna": "Comuna 3",
+        "sucursal": "Sucursal 3"
+    },
+    {
+        "sku": 4,
+        "nombre": "Zapato",
+        "descripcion": "Descripción del producto 4",
+        "color": "blanco",
+        "precio": 180,
+        "eliminado": false,
+        "id_tipo": 2,
+        "id_talla": 3,
+        "id_marca": 3,
+        "region": "Región 2",
+        "comuna": "Comuna 4",
+        "sucursal": "Sucursal 4"
+    }
+]
