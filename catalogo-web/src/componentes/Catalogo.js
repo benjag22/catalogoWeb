@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FiltroProductos from './FiltroProductos';
+import GetTallas from './GetTallas';
+import GetMarcas from './GetMarcas';
+import GetTipo from './GeTipo'
+import GetRegiones from './GetRegiones';
 import "./catalogoStyle.css";
 
 const Catalogo = () => {
@@ -11,113 +15,130 @@ const Catalogo = () => {
   };
 
   const [productos, setProductos] = useState([]);
-  const [filtros, setFiltros] = useState({
-    talla: '',
-    tipo: '',
-    marca: '',
-    region: '',
-    comuna: '',
-    nombre: '',
-    precio: '',
-    sucursal: ''
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [filters, setFilters] = useState({
+    name: '',
+    minPrice: '',
+    maxPrice: '',
+    type: [],
+    size: [],
+    region: [],
+    commune: [],
+    brand: [],
+    color: [],
+    sortByPrice: '',
+    sortByName: ''
   });
-  const [sortOrder, setSortOrder] = useState({ attribute: 'nombre', order: 'asc' });
-
-  const [tallas, setTallas] = useState([]);
-  const [tipos, setTipos] = useState([]);
-  const [marcas, setMarcas] = useState([]);
+  
+  const regiones = GetRegiones();
+  const brands = GetMarcas();
+  const types = GetTipo();
+  const sizes = GetTallas();
 
   useEffect(() => {
     const cargarProductos = async () => {
       try {
-        const response = await fetch('/productos.json');
+        const queryString = buildQueryString(filters);
+        const response = await fetch(`http://localhost:5001/api/v1/products${queryString}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
         setProductos(data);
-
-        const uniqueTallas = [...new Set(data.map(producto => producto.id_talla))];
-        const uniqueTipos = [...new Set(data.map(producto => producto.id_tipo))];
-        const uniqueMarcas = [...new Set(data.map(producto => producto.id_marca))];
-
-        setTallas(uniqueTallas);
-        setTipos(uniqueTipos);
-        setMarcas(uniqueMarcas);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     cargarProductos();
-  }, []);
+  }, [filters]);
 
-  const handleFiltroChange = (name, value) => {
-    setFiltros({
-      ...filtros,
+  const buildQueryString = (filters) => {
+    const query = Object.entries(filters)
+      .filter(([key, value]) => value && value.length > 0)
+      .map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return `${key}=${value.join(',')}`;
+        }
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join('&');
+    return query ? `?${query}` : '';
+  };
+
+  const handleFilterChange = (name, value) => {
+    setFilters({
+      ...filters,
       [name]: value
     });
   };
 
   const handleSortChange = (attribute, order) => {
-    setSortOrder({ attribute, order });
-  };
-
-  const filtrarProductos = () => {
-    let filteredProducts = productos.filter(producto => {
-      const cumpleFiltros =
-        (!filtros.talla || producto.id_talla === parseInt(filtros.talla)) &&
-        (!filtros.tipo || producto.id_tipo === parseInt(filtros.tipo)) &&
-        (!filtros.marca || producto.id_marca === parseInt(filtros.marca)) &&
-        (!filtros.region || producto.region === filtros.region) &&
-        (!filtros.comuna || producto.comuna === filtros.comuna) &&
-        (!filtros.nombre || producto.nombre.toLowerCase().includes(filtros.nombre.toLowerCase())) &&
-        (!filtros.precio || producto.precio <= parseFloat(filtros.precio)) &&
-        (!filtros.sucursal || producto.sucursal === filtros.sucursal);
-
-      return cumpleFiltros;
+    setFilters({
+      ...filters,
+      sortByName: attribute === 'nombre' ? order : filters.sortByName,
+      sortByPrice: attribute === 'precio' ? order : filters.sortByPrice
     });
-
-    if (sortOrder.attribute && sortOrder.order) {
-      filteredProducts = filteredProducts.sort((a, b) => {
-        if (sortOrder.attribute === 'precio') {
-          return sortOrder.order === 'asc' ? a.precio - b.precio : b.precio - a.precio;
-        } else {
-          const nameA = a.nombre.toLowerCase();
-          const nameB = b.nombre.toLowerCase();
-          if (nameA < nameB) return sortOrder.order === 'asc' ? -1 : 1;
-          if (nameA > nameB) return sortOrder.order === 'asc' ? 1 : -1;
-          return 0;
-        }
-      });
-    }
-
-    return filteredProducts;
   };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = productos.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(productos.length / itemsPerPage);
+
+  const handlePageChange = (direction) => {
+    if (direction === 'prev' && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    } else if (direction === 'next' && currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const renderPaginationControls = () => (
+    <div className="pagination">
+      <button
+        onClick={() => handlePageChange('prev')}
+        disabled={currentPage === 1}
+      >
+        Previous
+      </button>
+      <span>Page {currentPage} of {totalPages}</span>
+      <button
+        onClick={() => handlePageChange('next')}
+        disabled={currentPage === totalPages}
+      >
+        Next
+      </button>
+    </div>
+  );
 
   return (
     <div className="catalog-container">
       <FiltroProductos
-        filtros={filtros}
-        onChange={handleFiltroChange}
+        filtros={filters}
+        onChange={handleFilterChange}
         onSortChange={handleSortChange}
-        tallas={tallas}
-        tipos={tipos}
-        marcas={marcas}
+        tallas={sizes}
+        tipos={types}
+        marcas={brands}
+        regiones={regiones}
       />
-
       <div className="product-list">
-        {filtrarProductos().map(producto => (
-          <div key={producto.sku} className="product-item">
-            <span>{producto.nombre}</span>
-            <span>Precio: ${producto.precio}</span>
-            <span className={`availability ${producto.eliminado ? 'agotado' : ''}`}>
-              {producto.eliminado ? 'Agotado' : 'Disponible'}
+        {currentItems.map(productos => (
+          <div key={productos.sku} className="product-item">
+            <span>Nombre: {productos.name}</span>
+            <span>Precio: ${productos.price} CLP</span>
+            <span className={`availability ${productos.eliminado ? 'agotado' : ''}`}>
+              {productos.eliminado ? 'Agotado' : 'Disponible'}
             </span>
-            <button onClick={() => handleDetailsClick(producto.sku)}>Detalles</button>
+            <button onClick={() => handleDetailsClick(productos.sku)}>Detalles</button>
           </div>
         ))}
       </div>
+
+      {renderPaginationControls()}
     </div>
   );
 };

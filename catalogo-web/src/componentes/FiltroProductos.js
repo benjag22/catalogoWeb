@@ -1,10 +1,18 @@
-import React from 'react';
-import "./FiltroProductos.css"
+import React, { useState } from 'react';
+import "./FiltroProductos.css";
 
-const FiltroProductos = ({ filtros, onChange, onSortChange, tallas, tipos, marcas }) => {
+const FiltroProductos = ({ filtros, onChange, onSortChange, tallas, tipos, marcas, regiones }) => {
+  const [selectedRegion, setSelectedRegion] = useState('');
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     onChange(name, value);
+  };
+
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+    const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
+    onChange(name, selectedValues);
   };
 
   const handleSortChange = (e) => {
@@ -12,52 +20,83 @@ const FiltroProductos = ({ filtros, onChange, onSortChange, tallas, tipos, marca
     onSortChange(attribute, order);
   };
 
+  const handleRegionChange = (e) => {
+    const { value } = e.target;
+    setSelectedRegion(value);
+    onChange('region', value);
+    onChange('comuna', '');  // Clear comuna when region changes
+  };
+
+  const handleCommuneChange = (e) => {
+    const { value } = e.target;
+    onChange('comuna', value);
+  };
+
+  const filteredComunas = regiones.find(region => region.name === selectedRegion)?.communes || [];
+
   return (
     <div className="filter-container">
       <div className="search-bar">
         <input
           type="text"
           placeholder="Buscador"
-          name="nombre"
-          value={filtros.nombre}
+          name="name"
+          value={filtros.name}
           onChange={handleInputChange}
         />
       </div>
       <div className="filter-options">
-        <select name="talla" value={filtros.talla} onChange={handleInputChange}>
-          <option value="">Talla</option>
-          {tallas.map(talla => (
-            <option key={talla} value={talla}>{talla}</option>
-          ))}
-        </select>
-        <select name="tipo" value={filtros.tipo} onChange={handleInputChange}>
-          <option value="">Tipo</option>
-          {tipos.map(tipo => (
-            <option key={tipo} value={tipo}>{tipo}</option>
-          ))}
-        </select>
-        <select name="marca" value={filtros.marca} onChange={handleInputChange}>
-          <option value="">Marca</option>
-          {marcas.map(marca => (
-            <option key={marca} value={marca}>{marca}</option>
-          ))}
-        </select>
-        <select name="region" value={filtros.region} onChange={handleInputChange}>
-          <option value="">Región</option>
-        </select>
-        <select name="comuna" value={filtros.comuna} onChange={handleInputChange}>
-          <option value="">Comuna</option>
-        </select>
+        <input
+          type="number"
+          placeholder="Precio Mínimo"
+          name="minPrice"
+          value={filtros.minPrice}
+          onChange={handleInputChange}
+        />
         <input
           type="number"
           placeholder="Precio Máximo"
-          name="precio"
-          value={filtros.precio}
+          name="maxPrice"
+          value={filtros.maxPrice}
           onChange={handleInputChange}
         />
-        <select name="sucursal" value={filtros.sucursal} onChange={handleInputChange}>
-          <option value="">Sucursal</option>
+        <select name="size" value={filtros.size} onChange={handleSelectChange} multiple>
+          {tallas.map(talla => (
+            <option key={talla.id} value={talla.name}>{talla.name}</option>
+          ))}
         </select>
+        <select name="type" value={filtros.type} onChange={handleSelectChange} multiple>
+          {tipos.map(tipo => (
+            <option key={tipo.id} value={tipo.name}>{tipo.name}</option>
+          ))}
+        </select>
+        <select name="brand" value={filtros.brand} onChange={handleSelectChange} multiple>
+          {marcas.map(marca => (
+            <option key={marca.id} value={marca.name}>{marca.name}</option>
+          ))}
+        </select>
+        <select name="region" value={filtros.region} onChange={handleRegionChange}>
+          {regiones.map(region => (
+            <option key={region.number} value={region.number}>{region.name}</option>
+          ))}
+        </select>
+        <select
+          name="commune"
+          value={filtros.commune}
+          onChange={handleCommuneChange}
+          disabled={!filtros.region}
+        >
+          {filteredComunas.map(comuna => (
+            <option key={comuna.name} value={comuna.name}>{comuna.name}</option>
+          ))}
+        </select>
+        <input
+          type="text"
+          placeholder="Color"
+          name="color"
+          value={filtros.color}
+          onChange={handleInputChange}
+        />
       </div>
       <div className="sort-options">
         <select onChange={handleSortChange}>
