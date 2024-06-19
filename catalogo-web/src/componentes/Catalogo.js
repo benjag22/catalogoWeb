@@ -26,7 +26,7 @@ const Catalogo = () => {
     region: [],
     commune: [],
     brand: [],
-    color: [],
+    color: '',
     sortByPrice: '',
     sortByName: ''
   });
@@ -45,6 +45,9 @@ const Catalogo = () => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log(`http://localhost:5001/api/v1/products${queryString}`)
+        console.log(data)
+
         setProductos(data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -66,6 +69,7 @@ const Catalogo = () => {
       .join('&');
     return query ? `?${query}` : '';
   };
+
 
   const handleFilterChange = (name, value) => {
     setFilters({
