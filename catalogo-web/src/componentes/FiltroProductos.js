@@ -68,47 +68,53 @@ const FiltroProductos = ({ filtros, onChange, onSortChange, tallas, tipos, marca
           value={filtros.maxPrice}
           onChange={handleInputChange}
         />
-        <div className="checkbox-group">
-          <span>Tallas:</span>
-          {tallas.map(talla => (
-            <label key={talla.id}>
-              <input
-                type="checkbox"
-                value={talla.id}
-                checked={filtros.size.includes(talla.id)}
-                onChange={(e) => handleCheckboxChange(e, 'size')}
-              />
-              {talla.name}
-            </label>
-          ))}
+         <div className="checkbox-group-container">
+          <div className="checkbox-group-title">Tallas:</div>
+          <div className="checkbox-group-content">
+            {tallas.map(talla => (
+              <label key={talla.id}>
+                <input
+                  type="checkbox"
+                  value={talla.id}
+                  checked={filtros.size.includes(talla.id.toString())}
+                  onChange={(e) => handleCheckboxChange(e, 'size')}
+                />
+                {talla.name}
+              </label>
+            ))}
+          </div>
         </div>
-        <div className="checkbox-group">
-          <span>Tipos:</span>
-          {tipos.map(tipo => (
-            <label key={tipo.id}>
-              <input
-                type="checkbox"
-                value={tipo.id}
-                checked={filtros.type.includes(tipo.id)}
-                onChange={(e) => handleCheckboxChange(e, 'type')}
-              />
-              {tipo.name}
-            </label>
-          ))}
+        <div className="checkbox-group-container">
+          <div className="checkbox-group-title">Tipos:</div>
+          <div className="checkbox-group-content">
+            {tipos.map(tipo => (
+              <label key={tipo.id}>
+                <input
+                  type="checkbox"
+                  value={tipo.id}
+                  checked={filtros.type.includes(tipo.id.toString())}
+                  onChange={(e) => handleCheckboxChange(e, 'type')}
+                />
+                {tipo.name}
+              </label>
+            ))}
+          </div>
         </div>
-        <div className="checkbox-group">
-          <span>Marcas:</span>
-          {marcas.map(marca => (
-            <label key={marca.id}>
-              <input
-                type="checkbox"
-                value={marca.id}
-                checked={filtros.brand.includes(marca.id)}
-                onChange={(e) => handleCheckboxChange(e, 'brand')}
-              />
-              {marca.name}
-            </label>
-          ))}
+        <div className="checkbox-group-container">
+          <div className="checkbox-group-title">Marcas:</div>
+          <div className="checkbox-group-content">
+            {marcas.map(marca => (
+              <label key={marca.id}>
+                <input
+                  type="checkbox"
+                  value={marca.id}
+                  checked={filtros.brand.includes(marca.id.toString())}
+                  onChange={(e) => handleCheckboxChange(e, 'brand')}
+                />
+                {marca.name}
+              </label>
+            ))}
+          </div>
         </div>
         <select name="region" value={selectedRegion} onChange={handleRegionChange}>
           <option value=''>Seleccione una región</option>
