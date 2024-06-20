@@ -70,7 +70,6 @@ const Catalogo = () => {
     return query ? `?${query}` : '';
   };
 
-
   const handleFilterChange = (name, value) => {
     setFilters({
       ...filters,

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./FiltroProductos.css";
 
 const FiltroProductos = ({ filtros, onChange, onSortChange, tallas, tipos, marcas, regiones }) => {
-  const [selectedRegion, setSelectedRegion] = useState('');
-  const [selectedCommune, setSelectedCommune] = useState('');
+  const [selectedRegions, setSelectedRegions] = useState([]);
+  const [selectedCommunes, setSelectedCommunes] = useState(filtros.commune || []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,17 +30,28 @@ const FiltroProductos = ({ filtros, onChange, onSortChange, tallas, tipos, marca
   };
 
   const handleRegionChange = (e) => {
-    const { value } = e.target;
-    setSelectedRegion(value);
-    onChange('region', value);
+    const { value, checked } = e.target;
+    const updatedRegions = checked
+      ? [...selectedRegions, value]
+      : selectedRegions.filter(region => region !== value);
+
+    setSelectedRegions(updatedRegions);
+    onChange('region', updatedRegions);
   };
 
   const handleCommuneChange = (e) => {
-    const { value } = e.target;
-    onChange('commune', value);
+    const { value, checked } = e.target;
+    const updatedCommunes = checked
+      ? [...selectedCommunes, value]
+      : selectedCommunes.filter(commune => commune !== value);
+
+    setSelectedCommunes(updatedCommunes);
+    onChange('commune', updatedCommunes);
   };
 
-  const filteredComunas = regiones.find(region => region.number === parseInt(selectedRegion))?.communes || [];
+  const filteredCommunes = regiones
+    .filter(region => selectedRegions.length === 0 || selectedRegions.includes(region.number.toString()))
+    .flatMap(region => region.communes);
 
   return (
     <div className="filter-container">
@@ -68,7 +79,7 @@ const FiltroProductos = ({ filtros, onChange, onSortChange, tallas, tipos, marca
           value={filtros.maxPrice}
           onChange={handleInputChange}
         />
-         <div className="checkbox-group-container">
+        <div className="checkbox-group-container">
           <div className="checkbox-group-title">Tallas:</div>
           <div className="checkbox-group-content">
             {tallas.map(talla => (
@@ -116,23 +127,38 @@ const FiltroProductos = ({ filtros, onChange, onSortChange, tallas, tipos, marca
             ))}
           </div>
         </div>
-        <select name="region" value={selectedRegion} onChange={handleRegionChange}>
-          <option value=''>Seleccione una región</option>
-          {regiones.map(region => (
-            <option key={region.number} value={region.number}>{region.name}</option>
-          ))}
-        </select>
-        <select
-          name="commune"
-          value={selectedCommune}
-          onChange={handleCommuneChange}
-          disabled={!selectedRegion}
-        >
-          <option value="">Seleccione una comuna</option>
-          {filteredComunas.map(comuna => (
-            <option key={comuna.number} value={comuna.id}>{comuna.name}</option>
-          ))}
-        </select>
+        <div className="checkbox-group-container">
+          <div className="checkbox-group-title">Regiones:</div>
+          <div className="checkbox-group-content">
+            {regiones.map(region => (
+              <label key={region.number}>
+                <input
+                  type="checkbox"
+                  value={region.number}
+                  checked={selectedRegions.includes(region.number.toString())}
+                  onChange={handleRegionChange}
+                />
+                {region.name}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div className="checkbox-group-container">
+          <div className="checkbox-group-title">Comunas:</div>
+          <div className="checkbox-group-content">
+            {filteredCommunes.map(comuna => (
+              <label key={comuna.id}>
+                <input
+                  type="checkbox"
+                  value={comuna.id}
+                  checked={selectedCommunes.includes(comuna.id.toString())}
+                  onChange={handleCommuneChange}
+                />
+                {comuna.name}
+              </label>
+            ))}
+          </div>
+        </div>
         <input
           type="text"
           placeholder="Color"
