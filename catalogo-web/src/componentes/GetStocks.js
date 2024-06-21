@@ -15,7 +15,7 @@ const GetStocks = ({ sku }) => {
         }
         const stockData = await stockResponse.json();
         setStocks(stockData);
-        console.log(stockData);
+        console.log(stockData)
       } catch (error) {
         console.error('Error fetching stocks:', error);
         setError(error.message);

@@ -11,22 +11,27 @@ function DetalleProducto() {
 
   useEffect(() => {
     const fetchStoreDetails = async () => {
-      const storeDataPromises = stocks.map(async (stock) => {
-        const storeResponse = await fetch(`http://localhost:5001/api/v1/stores?id=${stock.idStore}`);
-        if (!storeResponse.ok) {
-          throw new Error(`Error fetching store info: ${storeResponse.statusText}`);
-        }
-        const storeInfo = await storeResponse.json();
-        console.log(storeInfo)
-        return {
-          ...stock,
-          storeName: storeInfo.storeName,
-          address: storeInfo.address,
-        };
-      });
+      try {
+        const storeDataPromises = stocks.map(async (stock) => {
+          const storeResponse = await fetch(`http://localhost:5001/api/v1/stores?id=${stock.storeId}`);
+          if (!storeResponse.ok) {
+            throw new Error(`Error fetching store info: ${storeResponse.statusText}`);
+          }
+          const storeInfo = await storeResponse.json();
+          console.log(storeInfo)
+          return {
+            ...stock,
+            storeName: storeInfo.name,
+            address: `${storeInfo.addressStreet} ${storeInfo.addressNumber}, ${storeInfo.commune}`,
+          };
+        });
 
-      const stocksWithStoreInfo = await Promise.all(storeDataPromises);
-      setDetailedStocks(stocksWithStoreInfo);
+        const stocksWithStoreInfo = await Promise.all(storeDataPromises);
+        setDetailedStocks(stocksWithStoreInfo);
+        console.log(stocksWithStoreInfo)
+      } catch (error) {
+        console.error(error.message);
+      }
     };
 
     if (stocks.length > 0) {

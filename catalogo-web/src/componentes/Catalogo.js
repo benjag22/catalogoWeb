@@ -47,7 +47,6 @@ const Catalogo = () => {
         const data = await response.json();
         console.log(`http://localhost:5001/api/v1/products${queryString}`)
         console.log(data)
-
         setProductos(data);
       } catch (error) {
         console.error('Error fetching data:', error);
