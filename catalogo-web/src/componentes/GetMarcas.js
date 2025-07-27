@@ -6,7 +6,7 @@ const GetMarcas = () => {
   useEffect(() => {
     const fetchMarcas = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/v1/brands');
+        const response = await fetch('http://localhost:5001/api/v1/products/brands');
         if (!response.ok) {
             console.log(response)
           throw new Error('Network response was not ok');
